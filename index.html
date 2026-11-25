@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kübra'ya Özel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #050505;
+    color: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  /* Arka Plan Yıldız / Işık Tozları */
+  #bgParticles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Konfeti / Kalp Yağmuru */
+  #confettiCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 50;
+    pointer-events: none;
+  }
+
+  /* Smooth fade-in animasyonları */
+  @keyframes smoothFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-step-0 {
+    opacity: 0;
+    animation: smoothFadeIn 1.8s ease-out 0.1s forwards;
+  }
+
+  .fade-step-1 {
+    opacity: 0;
+    animation: smoothFadeIn 2.2s ease-out 0.5s forwards;
+  }
+
+  .fade-step-2 {
+    opacity: 0;
+    animation: smoothFadeIn 2s ease-out 2.2s forwards;
+  }
+
+  .fade-step-3 {
+    opacity: 0;
+    animation: smoothFadeIn 2s ease-out 3.5s forwards;
+  }
+
+  .fade-step-4 {
+    opacity: 0;
+    animation: smoothFadeIn 2s ease-out 4.4s forwards;
+  }
+
+  #intro-screen {
+    max-width: 650px;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .special-badge {
+    display: inline-block;
+    background: rgba(232, 121, 249, 0.14);
+    border: 1px solid rgba(232, 121, 249, 0.55);
+    color: #f5d0fe;
+    padding: 6px 18px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    margin-bottom: 18px;
+    box-shadow: 0 0 16px rgba(217, 70, 239, 0.3);
+  }
+
+  .intro-text {
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: #f3e8ff;
+    line-height: 1.6;
+    margin-bottom: 35px;
+    text-shadow: 0 0 15px rgba(232, 121, 249, 0.35);
+  }
+
+  .reward-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #e879f9;
+    text-shadow: 0 0 18px rgba(217, 70, 239, 0.75);
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 30px;
+  }
+
+  .btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    min-height: 75px;
+  }
+
+  .hint-note {
+    margin-top: 18px;
+    font-size: 0.88rem;
+    color: #d8b4fe;
+    opacity: 0.85;
+  }
+
+  button {
+    background: rgba(232, 121, 249, 0.12);
+    border: 2px solid #e879f9;
+    color: #ffffff;
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 15px rgba(217, 70, 239, 0.25);
+    z-index: 12;
+  }
+
+  button:hover {
+    background: #e879f9;
+    color: #050505;
+    transform: scale(1.06);
+    box-shadow: 0 0 25px rgba(232, 121, 249, 0.85);
+  }
+
+  button.no-btn {
+    border-color: #f43f5e;
+    background: rgba(244, 63, 94, 0.12);
+    box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);
+    position: relative;
+  }
+
+  button.no-btn:hover {
+    background: #f43f5e;
+    color: #ffffff;
+    box-shadow: 0 0 25px rgba(244, 63, 94, 0.85);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* Hayır Seçeneği - Akan Yazı */
+  #no-screen {
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
+  .marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 30px 0;
+  }
+
+  .marquee-text {
+    display: inline-block;
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #ff2a5f;
+    text-shadow: 0 0 20px rgba(255, 42, 95, 0.8);
+    padding-left: 100%;
+    animation: marqueeFlow 8s linear infinite;
+  }
+
+  @keyframes marqueeFlow {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* 1. Evet Seçeneği - Kalp Canvas & Nabız Efekti */
+  #heart-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    z-index: 10;
+  }
+
+  @keyframes heartPulse {
+    0%, 100% {
+      transform: scale(1);
+      filter: drop-shadow(0 0 10px rgba(232, 121, 249, 0.5));
+    }
+    50% {
+      transform: scale(1.06);
+      filter: drop-shadow(0 0 24px rgba(232, 121, 249, 0.95));
+    }
+  }
+
+  #heartCanvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  #heartCanvas.pulsing {
+    animation: heartPulse 1.8s ease-in-out infinite;
+  }
+
+  .love-message {
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: #f5d0fe;
+    text-shadow: 0 0 16px rgba(232, 121, 249, 0.75);
+    margin-top: 10px;
+    max-width: 600px;
+    line-height: 1.5;
+    min-height: 4.5rem;
+  }
+
+  /* 2. Evet Seçeneği - 4 Kutu Oyunu */
+  #boxes-screen {
+    max-width: 650px;
+    width: 100%;
+    animation: smoothFadeIn 1.2s ease forwards;
+    z-index: 10;
+  }
+
+  .boxes-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #fbbf24;
+    text-shadow: 0 0 18px rgba(251, 191, 36, 0.65);
+    margin-bottom: 30px;
+    transition: filter 0.6s ease, opacity 0.6s ease;
+  }
+
+  .boxes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 440px;
+    margin: 0 auto 20px auto;
+    transition: filter 0.6s ease, opacity 0.6s ease;
+  }
+
+  .boxes-grid.blurred-loss,
+  .boxes-title.blurred-loss {
+    filter: blur(7px);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .mystery-box {
+    background: linear-gradient(145deg, #1a1025, #0f0914);
+    border: 2px solid #c084fc;
+    border-radius: 20px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    touch-action: manipulation;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #e9d5ff;
+    box-shadow: 0 0 18px rgba(192, 132, 252, 0.25);
+    transition: all 0.35s ease;
+    padding: 12px;
+    user-select: none;
+    position: relative;
+  }
+
+  .mystery-box:hover:not(.opened) {
+    transform: translateY(-6px) scale(1.03);
+    border-color: #f0abfc;
+    box-shadow: 0 0 28px rgba(232, 121, 249, 0.65);
+  }
+
+  .mystery-box.opened.win {
+    background: linear-gradient(145deg, #3b1d0e, #1f0e06);
+    border-color: #fbbf24;
+    color: #fde68a;
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);
+    transform: scale(1.04);
+  }
+
+  .mystery-box.opened.empty {
+    background: #141414;
+    border-color: #52525b;
+    color: #a1a1aa;
+    box-shadow: none;
+  }
+
+  .mystery-box.revealed-other {
+    opacity: 0.45;
+    border-style: dashed;
+    font-size: 1rem;
+    cursor: default;
+  }
+
+  .choice-tag {
+    position: absolute;
+    top: -11px;
+    background: #e879f9;
+    color: #050505;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 999px;
+    box-shadow: 0 0 10px rgba(232, 121, 249, 0.8);
+  }
+
+  .box-subtext {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f5d0fe;
+    margin-top: 10px;
+    min-height: 2rem;
+  }
+
+  .box-shuffle-note {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .extra-chance-area {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chance-btn {
+    background: rgba(52, 211, 153, 0.14);
+    border: 1.5px solid #34d399;
+    color: #a7f3d0;
+    padding: 10px 22px;
+    font-size: 0.95rem;
+    border-radius: 30px;
+  }
+
+  .chance-btn:hover {
+    background: #34d399;
+    color: #050505;
+    box-shadow: 0 0 22px rgba(52, 211, 153, 0.75);
+  }
+
+  .chance-status {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6ee7b7;
+    min-height: 1.3rem;
+  }
+
+  /* En sondaki yenileme uyarısı ve bonus buton */
+  .footer-area {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+  }
+
+  .footer-area.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .refresh-footer {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #38bdf8;
+    text-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+  }
+
+  .bonus-btn {
+    background: rgba(251, 191, 36, 0.14);
+    border: 1.5px solid #fbbf24;
+    color: #fde68a;
+    padding: 9px 20px;
+    font-size: 0.92rem;
+    border-radius: 30px;
+  }
+
+  .bonus-btn:hover {
+    background: #fbbf24;
+    color: #050505;
+  }
+
+  /* Oyun sonunda çıkan Devam Et butonu */
+  .continue-fab-wrap {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 65;
+    animation: smoothFadeIn 0.6s ease forwards;
+  }
+
+  .continue-btn {
+    background: rgba(232, 121, 249, 0.2);
+    border: 2px solid #f0abfc;
+    color: #ffffff;
+    padding: 13px 34px;
+    font-size: 1.08rem;
+    font-weight: 700;
+    border-radius: 50px;
+    box-shadow: 0 0 24px rgba(232, 121, 249, 0.65);
+  }
+
+  .continue-btn:hover {
+    background: #f0abfc;
+    color: #050505;
+    box-shadow: 0 0 32px rgba(240, 171, 252, 0.95);
+  }
+
+  .heart-fill-percent {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fda4af;
+    letter-spacing: 0.5px;
+    min-height: 1.4rem;
+  }
+
+  /* Oyun Bittiğinde Bulanık Katman + 2 Buton */
+  .end-blur-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 10, 0.68);
+    backdrop-filter: blur(11px);
+    -webkit-backdrop-filter: blur(11px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 80;
+    padding: 24px;
+    animation: smoothFadeIn 0.7s ease forwards;
+  }
+
+  .end-blur-title {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #f5d0fe;
+    text-shadow: 0 0 18px rgba(232, 121, 249, 0.75);
+    margin-bottom: 24px;
+  }
+
+  .end-blur-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .compliment-go-btn {
+    background: rgba(244, 63, 94, 0.18);
+    border: 2px solid #fb7185;
+    color: #ffe4e6;
+    box-shadow: 0 0 22px rgba(251, 113, 133, 0.45);
+  }
+
+  .compliment-go-btn:hover {
+    background: #fb7185;
+    color: #050505;
+    box-shadow: 0 0 28px rgba(251, 113, 133, 0.9);
+  }
+
+  /* İltifat Sayfası */
+  #compliment-screen {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at top, #1d0919 0%, #050505 70%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 20px 34px 20px;
+    z-index: 90;
+    animation: smoothFadeIn 0.7s ease forwards;
+  }
+
+  .compliment-page-header {
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #ff4d6d;
+    text-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+  }
+
+  .compliment-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  #rhythmCanvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  .compliment-output {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffe4e6;
+    text-shadow: 0 0 14px rgba(255, 77, 109, 0.55);
+    min-height: 3.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 10px;
+    line-height: 1.5;
+  }
+
+  .get-compliment-btn {
+    background: rgba(255, 77, 109, 0.16);
+    border: 2px solid #ff4d6d;
+    color: #ffffff;
+    padding: 14px 36px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    border-radius: 50px;
+    box-shadow: 0 0 22px rgba(255, 77, 109, 0.45);
+  }
+
+  .get-compliment-btn:hover {
+    background: #ff4d6d;
+    color: #050505;
+    box-shadow: 0 0 30px rgba(255, 77, 109, 0.9);
+  }
+
+  .heart-full-banner {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #ffe4e6;
+    background: rgba(255, 77, 109, 0.18);
+    border: 1px solid rgba(255, 77, 109, 0.55);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-top: 2px;
+  }
+
+  .coupon-note-box {
+    width: 100%;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+
+  .coupon-note-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: 12px;
+    padding: 9px 12px;
+    color: #ffffff;
+    font-size: 0.88rem;
+    outline: none;
+  }
+
+  .coupon-note-input:focus {
+    border-color: #fbbf24;
+  }
+
+  .coupon-custom-note-preview {
+    margin-top: 8px;
+    font-size: 0.84rem;
+    color: #fde68a;
+    min-height: 1.1rem;
+    word-break: break-word;
+  }
+
+
+
+  /* Ekranda belli olan ama büyük olmayan, daha sakin çapraz/ters geçiş (tıklanamaz) */
+  .subtle-whisper {
+    position: fixed;
+    top: 22%;
+    right: -260px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: rgba(245, 208, 254, 0.52);
+    text-shadow: 0 0 8px rgba(232, 121, 249, 0.25);
+    pointer-events: none;
+    user-select: none;
+    z-index: 25;
+    white-space: nowrap;
+    opacity: 0;
+  }
+
+  @keyframes subtlePass {
+    0% {
+      transform: translateX(0px) translateY(0px) rotate(-12deg);
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.52;
+    }
+    88% {
+      opacity: 0.52;
+    }
+    100% {
+      transform: translateX(calc(-100vw - 320px)) translateY(75px) rotate(-12deg);
+      opacity: 0;
+    }
+  }
+
+  .subtle-whisper.passing {
+    animation: subtlePass 7.2s linear forwards;
+  }
+
+  /* İltifat ekranında gizli bonus kart */
+  .secret-bonus-card {
+    margin-top: 6px;
+    background: rgba(255, 77, 109, 0.14);
+    border: 1px dashed rgba(255, 182, 193, 0.65);
+    border-radius: 16px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    color: #ffe4e6;
+    max-width: 420px;
+    line-height: 1.45;
+  }
+
+  /* Bitiş ekranında ruh hali seçici */
+  .mood-picker-box {
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .mood-picker-label {
+    font-size: 0.9rem;
+    color: #e9d5ff;
+    font-weight: 600;
+  }
+
+  .mood-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .mood-pill-btn {
+    padding: 7px 14px;
+    font-size: 0.84rem;
+    border-radius: 999px;
+    border-width: 1.5px;
+  }
+
+  .mood-pill-btn.active {
+    background: #e879f9;
+    color: #050505;
+    box-shadow: 0 0 18px rgba(232, 121, 249, 0.8);
+  }
+
+  .mood-reply-text {
+    font-size: 0.92rem;
+    color: #fde68a;
+    min-height: 1.3rem;
+    font-weight: 600;
+  }
+
+  /* Küçük ekranlarda buton, kutu ve kart taşmalarını önleme */
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .end-blur-overlay {
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding-top: max(20px, 5vh);
+    padding-bottom: max(24px, 5vh);
+  }
+
+  #compliment-screen {
+    overflow-y: auto;
+    gap: 12px;
+    padding: 18px 16px 24px 16px;
+  }
+
+  @media (max-width: 480px) {
+    button {
+      padding: 11px 22px;
+      font-size: 0.98rem;
+    }
+
+    .intro-text {
+      font-size: 1.2rem;
+      margin-bottom: 24px;
+    }
+
+    .reward-title {
+      font-size: 1.55rem;
+    }
+
+    .question-text {
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+    }
+
+    .boxes-grid {
+      gap: 12px;
+      max-width: 340px;
+    }
+
+    .mystery-box {
+      height: 112px;
+      font-size: 1.05rem;
+      border-radius: 16px;
+    }
+
+    .end-blur-title {
+      font-size: 1.3rem;
+      margin-bottom: 14px;
+    }
+
+    .mood-picker-box {
+      margin-bottom: 14px;
+      gap: 7px;
+    }
+
+    .mood-pill-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+
+    .end-blur-actions {
+      gap: 10px;
+    }
+
+    .compliment-page-header {
+      font-size: 1.35rem;
+    }
+
+    .compliment-output {
+      font-size: 1.05rem;
+      min-height: 2.8rem;
+    }
+
+    .get-compliment-btn {
+      padding: 11px 26px;
+      font-size: 1rem;
+    }
+
+    .promise-card {
+      padding: 20px 16px;
+      max-height: 92vh;
+      overflow-y: auto;
+    }
+  }
+
+  /* İltifat alt barında butonları diğer butonlarla aynı ölçeğe getirme */
+  .compliment-same-scale-bar {
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .compliment-continue-same {
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  @media (max-width: 480px) {
+    .compliment-same-scale-bar {
+      gap: 10px;
+    }
+
+    .compliment-same-scale-bar button,
+    .compliment-continue-same {
+      padding: 11px 22px;
+      font-size: 0.98rem;
+    }
+  }
+
+  /* Kupon / Bonus Söz Kartı */
+  .promise-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 140;
+    padding: 20px;
+  }
+
+  .promise-card {
+    background: linear-gradient(145deg, #1f112e, #0d0714);
+    border: 2px dashed #fbbf24;
+    border-radius: 22px;
+    padding: 26px 22px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 0 35px rgba(251, 191, 36, 0.45);
+    text-align: center;
+  }
+
+  .coupon-tag {
+    display: inline-block;
+    background: rgba(251, 191, 36, 0.18);
+    color: #fbbf24;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  .promise-card h3 {
+    color: #fbbf24;
+    font-size: 1.35rem;
+    margin-bottom: 10px;
+  }
+
+  .promise-card p {
+    color: #f3e8ff;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
+  .coupon-meta {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(251, 191, 36, 0.28);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 0.82rem;
+    color: #fde68a;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+
+  .modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .copy-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1.5px solid #38bdf8;
+    color: #bae6fd;
+    padding: 10px 18px;
+    font-size: 0.92rem;
+  }
+
+  .copy-btn:hover {
+    background: #38bdf8;
+    color: #050505;
+  }
+
+  .close-btn {
+    padding: 10px 20px;
+    font-size: 0.92rem;
+  }
+</style>
+</head>
+<body>
+
+  <div id="subtleWhisper" class="subtle-whisper" aria-hidden="true">bu çocuk senden hoşlanıoy</div>
+
+  <!-- ARKA PLAN YILDIZ / PARILTI TOZLARI -->
+  <canvas id="bgParticles"></canvas>
+  <!-- KONFETİ / KALP YAĞMURU -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- GİRİŞ EKRANI -->
+  <div id="intro-screen">
+    <div class="special-badge fade-step-0">Sadece Kübra İçin Kodlandı</div>
+
+    <p class="intro-text fade-step-1">
+      Bunu kendim kodlamakla uğraştım umarım beğenirsin
+    </p>
+
+    <div class="fade-step-2">
+      <div class="reward-title">ÇİKOLATALI SÜT KAZAN</div>
+      <div class="question-text">Beni Seviyor musun ?</div>
+    </div>
+
+    <div class="btn-group fade-step-3">
+      <button onclick="chooseFirstYes()">Evet</button>
+      <button onclick="chooseSecondYes()">Evet</button>
+      <button id="noBtn" class="no-btn" onmouseover="dodgeNo()" ontouchstart="dodgeNo(event)" onclick="chooseNo()">Hayır</button>
+    </div>
+
+    <div class="hint-note fade-step-4">İpucu: İki "Evet" de farklı sürprizler saklıyor</div>
+  </div>
+
+  <!-- HAYIR EKRANI -->
+  <div id="no-screen" class="hidden">
+    <div class="marquee-wrapper">
+      <div class="marquee-text">YANLIŞ CEVAP ÇİKOLATALI SÜTÜ KAÇIRDIN &nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp; YANLIŞ CEVAP ÇİKOLATALI SÜTÜ KAÇIRDIN</div>
+    </div>
+    <div id="no-footer" class="footer-area">
+      <div class="refresh-footer">Sayfayı Yenile Ve Tekrar Seçim Yap!!</div>
+      <button class="bonus-btn" onclick="openPromiseModal()">🍫 Çikolatalı Süt Kuponu</button>
+    </div>
+  </div>
+
+  <!-- 1. EVET EKRANI (KALP ANİMASYONU) -->
+  <div id="heart-screen" class="hidden">
+    <canvas id="heartCanvas"></canvas>
+    <div id="love-msg" class="love-message"></div>
+
+
+    <div id="heart-footer" class="footer-area">
+      <div class="refresh-footer">Sayfayı Yenile Ve Tekrar Seçim Yap!!</div>
+      <button class="bonus-btn" onclick="openPromiseModal()">🍫 Çikolatalı Süt Kuponu</button>
+    </div>
+  </div>
+
+  <!-- 2. EVET EKRANI (4 KUTU) -->
+  <div id="boxes-screen" class="hidden">
+    <div id="boxes-title" class="boxes-title">Kutuların Birinde Çikolatalı Süt Var !</div>
+    <div class="boxes-grid" id="boxes-grid">
+      <div class="mystery-box" onclick="openBox(0, this)">🎁<br>1. Kutu</div>
+      <div class="mystery-box" onclick="openBox(1, this)">🎁<br>2. Kutu</div>
+      <div class="mystery-box" onclick="openBox(2, this)">🎁<br>3. Kutu</div>
+      <div class="mystery-box" onclick="openBox(3, this)">🎁<br>4. Kutu</div>
+    </div>
+    <div id="box-subtext" class="box-subtext"></div>
+    <div id="box-shuffle-note" class="box-shuffle-note hidden">Not: Sayfa her yenilendiğinde çikolatalı süt başka kutuya gizlenir</div>
+
+    <div id="extraChanceArea" class="extra-chance-area hidden">
+      <div class="btn-group" style="min-height:auto;gap:10px;">
+        <button type="button" id="retryBoxBtn" class="chance-btn" onclick="retryBoxGame()">Tekrar Dene</button>
+      </div>
+      <div id="chanceStatus" class="chance-status"></div>
+    </div>
+
+
+    <div id="boxes-footer" class="footer-area">
+      <div class="refresh-footer">Sayfayı Yenile Ve Tekrar Seçim Yap!!</div>
+      <button class="bonus-btn" onclick="openPromiseModal()">🍫 Çikolatalı Süt Kuponu</button>
+    </div>
+  </div>
+
+  <!-- OYUN SONU DEVAM ET BUTONU -->
+  <div id="continueBtnWrap" class="continue-fab-wrap hidden">
+    <button type="button" class="continue-btn" onclick="onContinueClick()">Devam Et ➜</button>
+  </div>
+
+  <!-- OYUN BİTİMİ BULANIK KATMAN & 2 BUTON -->
+  <div id="endBlurOverlay" class="end-blur-overlay hidden">
+    <div class="end-blur-title">Tamamladın canım</div>
+    <div class="mood-picker-box">
+      <div class="mood-picker-label">Şu an modun nasıl?</div>
+      <div class="mood-pills">
+        <button type="button" class="mood-pill-btn" onclick="pickEndMood('neşeli', this)">neşeli</button>
+        <button type="button" class="mood-pill-btn" onclick="pickEndMood('yorgun', this)">yorgun</button>
+        <button type="button" class="mood-pill-btn" onclick="pickEndMood('meraklı', this)">meraklı</button>
+      </div>
+      <div id="moodReplyText" class="mood-reply-text"></div>
+    </div>
+    <div class="end-blur-actions">
+      <button type="button" onclick="location.reload()">Sayfayı Yenile</button>
+      <button type="button" class="compliment-go-btn" onclick="openComplimentScreen()">İltifat Ekranına Git</button>
+      <button type="button" class="bonus-btn" onclick="openPromiseModal()">🍫 Çikolatalı Süt Kuponu</button>
+    </div>
+  </div>
+
+  <!-- İLTİFAT SAYFASI -->
+  <div id="compliment-screen" class="hidden">
+    <div class="compliment-page-header">İLTİFAT SAYFAM</div>
+
+    <div class="compliment-center">
+      <canvas id="rhythmCanvas"></canvas>
+      <div id="heartFillPercent" class="heart-fill-percent">Kalp Doluluk: %0</div>
+      <div id="heartFullBanner" class="heart-full-banner hidden">Oha kalbe bak</div>
+      <div id="complimentOutput" class="compliment-output">Aşağıdaki butona bas bakim</div>
+      <div id="secretBonusCard" class="secret-bonus-card hidden">Gizli not: Bütün iltifatları topladın; kupona yazacağın ufak notu da merakla bekliyorum.</div>
+      <button type="button" class="get-compliment-btn" onclick="drawCompliment()">İltifat al</button>
+    </div>
+
+    <div class="compliment-bottom-bar compliment-same-scale-bar">
+      <button type="button" class="close-btn" onclick="location.reload()">Sayfayı Yenile</button>
+      <button type="button" class="compliment-continue-same" onclick="onContinueClick()">Devam Et ➜</button>
+    </div>
+  </div>
+
+  <!-- KUPON / BONUS SÖZ KARTI -->
+  <div id="promise-modal" class="promise-modal hidden" onclick="closePromiseModal()">
+    <div class="promise-card" onclick="event.stopPropagation()">
+      <div class="coupon-tag">RESMİ ÖDÜL KUPONU</div>
+      <h3>🍫🥛 Çikolatalı Süt Sözü</h3>
+      <p>İlk görüşmede çikolatalı sütün benden bir tanem! ❤️<br>Bu kuponu ekran görüntüsü alarak kullanabilirsin.</p>
+      <div class="coupon-meta" id="couponMeta">
+        Kupon Oluşturulma Zamanı: --<br>
+        Geçerlilik: Sınırsız • Sahibi: Kübra
+      </div>
+      <div class="coupon-note-box">
+        <input type="text" id="couponNoteInput" class="coupon-note-input" maxlength="90" placeholder="Kupona ufak bi not yaz (opsiyonel)..." oninput="updateCouponNotePreview()">
+        <div id="couponNotePreview" class="coupon-custom-note-preview"></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="copy-btn" id="copyCouponBtn" onclick="copyCouponText()">📋 Kuponu Kopyala</button>
+        <button type="button" class="close-btn" onclick="closePromiseModal()">Tamam, Sözünü Aldım!</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  /* --- SES EFEKTLERİ & TİTREŞİM --- */
+  let audioCtx = null;
+
+  function playTone(freq, duration, type, delay) {
+    try {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (!audioCtx) return;
+      if (audioCtx.state === "suspended") audioCtx.resume();
+
+      const startTime = audioCtx.currentTime + (delay || 0);
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = type || "sine";
+      osc.frequency.setValueAtTime(freq, startTime);
+
+      gain.gain.setValueAtTime(0.08, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    } catch (err) {}
+  }
+
+  function vibrateDevice(pattern) {
+    try {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    } catch (err) {}
+  }
+
+  function playPopSound() {
+    playTone(540, 0.12, "sine", 0);
+    vibrateDevice(25);
+  }
+
+  function playWinSound() {
+    playTone(523.25, 0.16, "triangle", 0);
+    playTone(659.25, 0.16, "triangle", 0.12);
+    playTone(783.99, 0.28, "triangle", 0.24);
+    vibrateDevice([40, 30, 70]);
+  }
+
+  function playWarnSound() {
+    playTone(230, 0.22, "sawtooth", 0);
+    playTone(180, 0.28, "sawtooth", 0.16);
+    vibrateDevice([80, 40, 80]);
+  }
+
+  /* --- ARKA PLAN PARILTILARI --- */
+  const bgCanvas = document.getElementById("bgParticles");
+  const bgCtx = bgCanvas.getContext("2d");
+  let stars = [];
+
+  function initBgParticles() {
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
+    stars = [];
+    for (let i = 0; i < 50; i++) {
+      stars.push({
+        x: Math.random() * bgCanvas.width,
+        y: Math.random() * bgCanvas.height,
+        r: Math.random() * 1.6 + 0.5,
+        vy: -(Math.random() * 0.35 + 0.1),
+        alpha: Math.random() * 0.55 + 0.15
+      });
+    }
+  }
+
+  function animateBgParticles() {
+    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    for (const s of stars) {
+      s.y += s.vy;
+      if (s.y < 0) {
+        s.y = bgCanvas.height;
+        s.x = Math.random() * bgCanvas.width;
+      }
+      bgCtx.beginPath();
+      bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      bgCtx.fillStyle = `rgba(240, 171, 252, ${s.alpha})`;
+      bgCtx.fill();
+    }
+    requestAnimationFrame(animateBgParticles);
+  }
+
+  window.addEventListener("resize", initBgParticles);
+  initBgParticles();
+  animateBgParticles();
+
+  /* --- OYUN SONU DEVAM ET BUTONU & 3 SEÇENEK EKRANI --- */
+  let endOverlayShown = false;
+  let continueBtnShown = false;
+
+  function showContinueButton() {
+    if (continueBtnShown || endOverlayShown) return;
+    continueBtnShown = true;
+    const wrap = document.getElementById("continueBtnWrap");
+    if (wrap) wrap.classList.remove("hidden");
+  }
+
+  function onContinueClick() {
+    playPopSound();
+    const wrap = document.getElementById("continueBtnWrap");
+    if (wrap) wrap.classList.add("hidden");
+    const compScreen = document.getElementById("compliment-screen");
+    if (compScreen) compScreen.classList.add("hidden");
+    showEndBlurOverlay();
+  }
+
+  function showEndBlurOverlay() {
+    if (endOverlayShown) return;
+    endOverlayShown = true;
+    document.getElementById("endBlurOverlay").classList.remove("hidden");
+  }
+
+  /* --- HAYIR BUTONU KAÇMA & KÜÇÜLME --- */
+  let dodgeCount = 0;
+  const dodgeTexts = ["Emin misin?", "Bak emin misin?", "Son kararın mı?", "Hayır"];
+
+  function dodgeNo(e) {
+    if (dodgeCount >= 3) return;
+    if (e && e.cancelable) e.preventDefault();
+    playPopSound();
+
+    const btn = document.getElementById("noBtn");
+    const dx = (Math.random() > 0.5 ? 1 : -1) * (45 + Math.random() * 40);
+    const dy = (Math.random() > 0.5 ? 1 : -1) * (20 + Math.random() * 25);
+    const scale = 1 - (dodgeCount + 1) * 0.08;
+
+    btn.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+    btn.textContent = dodgeTexts[dodgeCount];
+    dodgeCount++;
+  }
+
+  // Kutulardan rastgele birine çikolatalı süt yerleştir (0, 1, 2 veya 3)
+  let winningIndex = Math.floor(Math.random() * 4);
+  let boxChosen = false;
+  let extraChanceUsed = false;
+
+  function hideIntro() {
+    document.getElementById("intro-screen").classList.add("hidden");
+  }
+
+  // HAYIR SEÇENEĞİ
+  function chooseNo() {
+    playWarnSound();
+    hideIntro();
+    const noScreen = document.getElementById("no-screen");
+    noScreen.classList.remove("hidden");
+    setTimeout(() => {
+      document.getElementById("no-footer").classList.add("visible");
+    }, 1200);
+    setTimeout(() => {
+      showContinueButton();
+    }, 1800);
+  }
+
+  // 1. EVET SEÇENEĞİ (Yavaşlatılmış Çizgili Kalp + Nabız + Harf Harf Yazı)
+  function chooseFirstYes() {
+    playPopSound();
+    hideIntro();
+    const heartScreen = document.getElementById("heart-screen");
+    heartScreen.classList.remove("hidden");
+    startHeartAnimation();
+  }
+
+  function typeLoveMessage() {
+    const target = document.getElementById("love-msg");
+    const line1 = "Bende Seni Seviyorum Kübra !!!!";
+    const line2 = "Çikolatalı süt diğer seçenekteydi bir tanem.";
+    const fullText = line1 + "\n" + line2;
+    let idx = 0;
+
+    const timer = setInterval(() => {
+      if (idx < fullText.length) {
+        const ch = fullText[idx];
+        target.innerHTML += ch === "\n" ? "<br>" : ch;
+        idx++;
+      } else {
+        clearInterval(timer);
+        setTimeout(() => {
+          document.getElementById("heart-footer").classList.add("visible");
+        }, 1200);
+        setTimeout(() => {
+          showEndBlurOverlay();
+        }, 3200);
+      }
+    }, 45);
+  }
+
+  function startHeartAnimation() {
+    const canvas = document.getElementById("heartCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const size = Math.min(window.innerWidth * 0.9, 440);
+    canvas.width = size;
+    canvas.height = size;
+
+    const totalSteps = 120;
+    let currentStep = 0;
+
+    function heartX(t) {
+      return 16 * Math.pow(Math.sin(t), 3);
+    }
+
+    function heartY(t) {
+      return -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    }
+
+    function drawStep() {
+      if (currentStep >= totalSteps) {
+        canvas.classList.add("pulsing");
+        playWinSound();
+        typeLoveMessage();
+        return;
+      }
+
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2 + 15;
+      const scale = canvas.width / 38;
+
+      const theta = (currentStep / totalSteps) * Math.PI * 2;
+      const x = cx + heartX(theta) * scale;
+      const y = cy + heartY(theta) * scale;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = "#e879f9";
+      ctx.lineWidth = 1.7;
+      ctx.shadowColor = "#d946ef";
+      ctx.shadowBlur = 12;
+      ctx.stroke();
+      ctx.restore();
+
+      currentStep++;
+      setTimeout(() => requestAnimationFrame(drawStep), 55);
+    }
+
+    drawStep();
+  }
+
+  // 2. EVET SEÇENEĞİ (4 Kutu + Konfeti)
+  function chooseSecondYes() {
+    playPopSound();
+    hideIntro();
+    document.getElementById("boxes-screen").classList.remove("hidden");
+  }
+
+  function openBox(index, element) {
+    if (boxChosen) return;
+    boxChosen = true;
+
+    const allBoxes = document.querySelectorAll(".mystery-box");
+    const subtext = document.getElementById("box-subtext");
+
+    if (index === winningIndex) {
+      playWinSound();
+      element.classList.add("opened", "win");
+      element.innerHTML = '<span class="choice-tag">Senin Seçimin</span>🍫🥛<br>Çikolatalı Süt Kazandın!';
+      subtext.textContent = "Afiyet olsun bir tanem!";
+      launchConfetti();
+
+      setTimeout(() => {
+        document.getElementById("boxes-footer").classList.add("visible");
+      }, 800);
+      setTimeout(() => {
+        showEndBlurOverlay();
+      }, 2800);
+    } else {
+      playPopSound();
+      element.classList.add("opened", "empty");
+      element.innerHTML = '<span class="choice-tag">Senin Seçimin</span>❌<br>Boş';
+      subtext.textContent = "Tüh, bu kutu boş çıktı... Ama kalbimdeki yerin hep dolu! ❤️";
+
+      allBoxes.forEach((box, i) => {
+        if (i !== index) {
+          box.classList.add("opened", "revealed-other");
+          if (i === winningIndex) {
+            box.innerHTML = "🍫🥛<br>Çikolatalı Süt Buradaydı";
+          } else {
+            box.innerHTML = "❌<br>Boş";
+          }
+        }
+      });
+
+      document.getElementById("box-shuffle-note").classList.remove("hidden");
+      document.getElementById("boxes-grid").classList.add("blurred-loss");
+      document.getElementById("boxes-title").classList.add("blurred-loss");
+      document.getElementById("extraChanceArea").classList.remove("hidden");
+
+      setTimeout(() => {
+        document.getElementById("boxes-footer").classList.add("visible");
+      }, 800);
+    }
+  }
+
+  function retryBoxGame() {
+    playPopSound();
+    boxChosen = false;
+    winningIndex = Math.floor(Math.random() * 4);
+
+    const grid = document.getElementById("boxes-grid");
+    const title = document.getElementById("boxes-title");
+    const subtext = document.getElementById("box-subtext");
+    const shuffleNote = document.getElementById("box-shuffle-note");
+    const extraArea = document.getElementById("extraChanceArea");
+    const chanceStatus = document.getElementById("chanceStatus");
+    const continueWrap = document.getElementById("continueBtnWrap");
+
+    if (grid) grid.classList.remove("blurred-loss");
+    if (title) title.classList.remove("blurred-loss");
+    if (subtext) subtext.textContent = "";
+    if (shuffleNote) shuffleNote.classList.add("hidden");
+    if (extraArea) extraArea.classList.add("hidden");
+    if (chanceStatus) chanceStatus.textContent = "";
+    if (continueWrap) continueWrap.classList.add("hidden");
+
+    const allBoxes = document.querySelectorAll(".mystery-box");
+    allBoxes.forEach((box, i) => {
+      box.className = "mystery-box";
+      box.innerHTML = "🎁<br>" + (i + 1) + ". Kutu";
+    });
+  }
+
+  /* --- İLTİFAT SAYFASI: RİTİM ÇİZGİSİ -> GERÇEK KALP DÖNÜŞÜMÜ & DOLUM --- */
+  const compliments = [
+    "Yanında konuşamasamda yanında olmayı seviyorum",
+    "Gülüşünü seviyorum",
+    "Birbirimize verdiğimiz boş infoları seviyorum",
+    "Galiba seni seviyorum"
+  ];
+  const collectedCompliments = new Set();
+  let lastComplimentIndex = -1;
+  let rhythmAnimId = null;
+  let targetFillRatio = 0;
+  let currentFillRatio = 0;
+
+  let fullHeartCelebrated = false;
+
+  function pickEndMood(mood, btnEl) {
+    playPopSound();
+    document.querySelectorAll(".mood-pill-btn").forEach((b) => b.classList.remove("active"));
+    if (btnEl) btnEl.classList.add("active");
+    const replies = {
+      neşeli: "Neşeli modun bulaşıcı he gülüşün günümün en iyi kısmı flaan",
+      yorgun: "Yorgunsan bugün ekstra şımartılma hakkın var",
+      meraklı: "Meraklıysan iltifat ekranındaki kalbi %100 doldur gizli not vr orda."
+    };
+    const out = document.getElementById("moodReplyText");
+    if (out) out.textContent = replies[mood] || "";
+  }
+
+  function updateHeartFillUI() {
+    const ratio = collectedCompliments.size / compliments.length;
+    targetFillRatio = ratio;
+    const pct = Math.round(ratio * 100);
+    const pctEl = document.getElementById("heartFillPercent");
+    const bannerEl = document.getElementById("heartFullBanner");
+    if (pctEl) {
+      pctEl.textContent = "Kalp Doluluk: %" + pct + (pct === 100 ? " (Tam Doldu ❤️)" : "");
+    }
+    if (bannerEl) {
+      if (pct === 100) {
+        bannerEl.classList.remove("hidden");
+        const bonusCard = document.getElementById("secretBonusCard");
+        if (bonusCard) bonusCard.classList.remove("hidden");
+        if (!fullHeartCelebrated) {
+          fullHeartCelebrated = true;
+          playWinSound();
+          launchConfetti();
+        }
+      } else {
+        bannerEl.classList.add("hidden");
+      }
+    }
+  }
+
+  function openComplimentScreen() {
+    playPopSound();
+    document.getElementById("compliment-screen").classList.remove("hidden");
+    updateHeartFillUI();
+    startRhythmToHeartAnimation();
+  }
+
+  function drawCompliment() {
+    playPopSound();
+    let idx = Math.floor(Math.random() * compliments.length);
+    if (idx === lastComplimentIndex && compliments.length > 1) {
+      idx = (idx + 1) % compliments.length;
+    }
+    lastComplimentIndex = idx;
+    collectedCompliments.add(idx);
+    updateHeartFillUI();
+    document.getElementById("complimentOutput").textContent = compliments[idx];
+  }
+
+  function startRhythmToHeartAnimation() {
+    if (rhythmAnimId) cancelAnimationFrame(rhythmAnimId);
+
+    const canvas = document.getElementById("rhythmCanvas");
+    const ctx = canvas.getContext("2d");
+    const size = Math.min(window.innerWidth * 0.88, 340);
+    canvas.width = size;
+    canvas.height = Math.round(size * 0.78);
+
+    const startTime = performance.now();
+    const rhythmDuration = 2400; // 2.4 sn kalp ritim çizgisi
+    const morphDuration = 900;   // 0.9 sn gerçek kalbe dönüşüm
+
+    function ecgOffset(xNorm) {
+      // xNorm: 0..1 yatay konum
+      const d1 = xNorm - 0.30;
+      const d2 = xNorm - 0.72;
+      const pulse1 = Math.exp(-Math.pow(d1 * 28, 2)) * -0.34;
+      const pulse2 = Math.exp(-Math.pow(d2 * 28, 2)) * -0.34;
+      const spike1 = Math.exp(-Math.pow((xNorm - 0.27) * 55, 2)) * 0.14;
+      const spike2 = Math.exp(-Math.pow((xNorm - 0.33) * 55, 2)) * 0.18;
+      return pulse1 + pulse2 + spike1 + spike2;
+    }
+
+    function realHeartPoint(u, scale, cx, cy) {
+      // u: -1..1 arası parametrik kalp eğrisi
+      const t = u * Math.PI;
+      const hx = 16 * Math.pow(Math.sin(t), 3);
+      const hy = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+      return {
+        x: cx + hx * scale,
+        y: cy + hy * scale
+      };
+    }
+
+    function render(now) {
+      const elapsed = now - startTime;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2 + 8;
+      const heartScale = canvas.width / 42;
+
+      let morph = 0;
+      if (elapsed > rhythmDuration) {
+        morph = Math.min(1, (elapsed - rhythmDuration) / morphDuration);
+      }
+
+      const beatScale = morph >= 1 ? 1 + 0.06 * Math.sin((elapsed - rhythmDuration - morphDuration) * 0.008) : 1;
+      const scanPhase = (elapsed / 1100) % 1;
+      const samples = 180;
+
+      ctx.save();
+      ctx.beginPath();
+
+      for (let i = 0; i <= samples; i++) {
+        const frac = i / samples; // 0..1
+        const u = frac * 2 - 1;   // -1..1
+
+        // Ritim hattı noktası
+        const rx = cx + u * (canvas.width * 0.42);
+        const waveCoord = ((frac + scanPhase) % 1);
+        const ry = cy + ecgOffset(waveCoord) * (canvas.height * 0.45);
+
+        // Gerçek kalp noktası
+        const hp = realHeartPoint(u, heartScale * beatScale, cx, cy);
+
+        const x = rx + (hp.x - rx) * morph;
+        const y = ry + (hp.y - ry) * morph;
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+
+      currentFillRatio += (targetFillRatio - currentFillRatio) * 0.12;
+      if (Math.abs(targetFillRatio - currentFillRatio) < 0.002) {
+        currentFillRatio = targetFillRatio;
+      }
+
+      if (morph >= 1) {
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255, 77, 109, 0.14)";
+        ctx.fill();
+
+        if (currentFillRatio > 0) {
+          ctx.save();
+          ctx.clip();
+
+          const heartTop = cy - 13 * heartScale * beatScale;
+          const heartBottom = cy + 17 * heartScale * beatScale;
+          const totalH = heartBottom - heartTop;
+          const fillH = totalH * currentFillRatio;
+          const fillY = heartBottom - fillH;
+
+          const grad = ctx.createLinearGradient(0, fillY, 0, heartBottom);
+          grad.addColorStop(0, "rgba(255, 117, 143, 0.92)");
+          grad.addColorStop(1, "rgba(255, 42, 95, 0.98)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, fillY, canvas.width, fillH + 4);
+
+          ctx.restore();
+        }
+      }
+
+      ctx.strokeStyle = "#ff4d6d";
+      ctx.lineWidth = morph >= 1 ? 3 : 2.6;
+      ctx.shadowColor = "#ff2a5f";
+      ctx.shadowBlur = 16;
+      ctx.stroke();
+      ctx.restore();
+
+      rhythmAnimId = requestAnimationFrame(render);
+    }
+
+    rhythmAnimId = requestAnimationFrame(render);
+  }
+
+  /* --- KONFETİ YAĞMURU --- */
+  function launchConfetti() {
+    const cCanvas = document.getElementById("confettiCanvas");
+    const cCtx = cCanvas.getContext("2d");
+    cCanvas.width = window.innerWidth;
+    cCanvas.height = window.innerHeight;
+
+    const icons = ["🍫", "🥛", "❤️", "", "💜"];
+    const pieces = [];
+
+    for (let i = 0; i < 60; i++) {
+      pieces.push({
+        x: Math.random() * cCanvas.width,
+        y: -20 - Math.random() * 280,
+        vy: Math.random() * 3.5 + 2.2,
+        vx: (Math.random() - 0.5) * 2.5,
+        size: Math.random() * 14 + 16,
+        icon: icons[Math.floor(Math.random() * icons.length)]
+      });
+    }
+
+    let frame = 0;
+    function renderConfetti() {
+      cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+      for (const p of pieces) {
+        p.x += p.vx;
+        p.y += p.vy;
+        cCtx.font = `${p.size}px sans-serif`;
+        cCtx.fillText(p.icon, p.x, p.y);
+      }
+      frame++;
+      if (frame < 190) {
+        requestAnimationFrame(renderConfetti);
+      } else {
+        cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+      }
+    }
+    renderConfetti();
+  }
+
+  /* --- DAHA SAKİN TERS/ÇAPRAZ GEÇİŞ --- */
+  (function scheduleSubtleWhisper() {
+    const el = document.getElementById("subtleWhisper");
+    if (!el) return;
+
+    function triggerOnce() {
+      const topPct = 16 + Math.floor(Math.random() * 56);
+      el.style.top = topPct + "%";
+      el.classList.remove("passing");
+      void el.offsetWidth;
+      el.classList.add("passing");
+    }
+
+    setTimeout(triggerOnce, 800);
+    setInterval(triggerOnce, 8000);
+  })();
+
+  /* --- KUPON KARTI & TARİH DAMGASI --- */
+  let generatedTimestamp = "";
+
+  function formatCouponDate(d) {
+    try {
+      return d.toLocaleDateString("tr-TR") + " " + d.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+    } catch (e) {
+      const pad = (n) => String(n).padStart(2, "0");
+      return pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." + d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+    }
+  }
+
+  function fallbackCopy(text) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function openPromiseModal() {
+    playPopSound();
+    const now = new Date();
+    generatedTimestamp = formatCouponDate(now);
+    const metaEl = document.getElementById("couponMeta");
+    const copyBtn = document.getElementById("copyCouponBtn");
+    const modalEl = document.getElementById("promise-modal");
+    if (metaEl) {
+      metaEl.innerHTML =
+        "Kupon Oluşturulma Zamanı: <strong>" + generatedTimestamp + "</strong><br>Geçerlilik: Sınırsız • Sahibi: Kübra";
+    }
+    if (copyBtn) {
+      copyBtn.textContent = "📋 Kuponu Kopyala";
+    }
+    if (modalEl) {
+      modalEl.classList.remove("hidden");
+    }
+  }
+
+  function closePromiseModal() {
+    const modalEl = document.getElementById("promise-modal");
+    if (modalEl) {
+      modalEl.classList.add("hidden");
+    }
+  }
+
+  function updateCouponNotePreview() {
+    const inp = document.getElementById("couponNoteInput");
+    const prev = document.getElementById("couponNotePreview");
+    const val = inp ? inp.value.trim() : "";
+    if (prev) {
+      prev.textContent = val ? "Notun: " + val : "";
+    }
+  }
+
+  function copyCouponText() {
+    playPopSound();
+    const copyBtn = document.getElementById("copyCouponBtn");
+    const inp = document.getElementById("couponNoteInput");
+    const extraNote = inp ? inp.value.trim() : "";
+    const noteLine = extraNote ? "\nEk Not: " + extraNote : "";
+    const text = "🍫🥛 RESMİ ÇİKOLATALI SÜT KUPONU\nSahibi: Kübra\nTarih: " + generatedTimestamp + "\nNot: İlk görüşmede çikolatalı sütün benden bir tanem! ❤️" + noteLine;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        if (copyBtn) copyBtn.textContent = "✅ Kopyalandı!";
+      }).catch(() => {
+        if (copyBtn) copyBtn.textContent = fallbackCopy(text) ? "✅ Kopyalandı!" : "✅ Ekran Görüntüsü Al!";
+      });
+    } else {
+      if (copyBtn) copyBtn.textContent = fallbackCopy(text) ? "✅ Kopyalandı!" : "✅ Ekran Görüntüsü Al!";
+    }
+  }
+</script>
+</body>
+</html>
